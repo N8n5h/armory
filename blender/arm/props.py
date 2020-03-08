@@ -126,6 +126,8 @@ def init_properties():
     bpy.types.Object.arm_proxy_sync_modifiers = BoolProperty(name="Modifiers", description="Keep modifiers synchronized with proxy object", default=True, update=arm.proxy.proxy_sync_modifiers)
     bpy.types.Object.arm_proxy_sync_traits = BoolProperty(name="Traits", description="Keep traits synchronized with proxy object", default=True, update=arm.proxy.proxy_sync_traits)
     bpy.types.Object.arm_proxy_sync_trait_props = BoolProperty(name="Trait Property Values", description="Keep trait property values synchronized with proxy object", default=False, update=arm.proxy.proxy_sync_traits)
+    bpy.types.Object.arm_visibility_anim = BoolProperty(name="Visibility Anim", description="Signals if this object should be exported as a visibility anim", default=False)
+    bpy.types.Object.arm_visibility_anim_frame = PointerProperty(name="Frame Data for Visibility Anim", type=VisibilityAnimFrame)
     # For speakers
     bpy.types.Speaker.arm_play_on_start = BoolProperty(name="Play on Start", description="Play this sound automatically", default=False)
     bpy.types.Speaker.arm_loop = BoolProperty(name="Loop", description="Loop this sound", default=False)
@@ -315,9 +317,15 @@ def init_properties_on_load():
         wrd.arm_commit = arm_commit
         arm.make.clean()
 
+class VisibilityAnimFrame(bpy.types.PropertyGroup):
+    frame_number: IntProperty(name="Frame Number", default=-1)
+    layer_name: StringProperty(name="Layer Name", default="")
+
 def register():
+    bpy.utils.register_class(VisibilityAnimFrame)
     init_properties()
     arm.utils.fetch_bundled_script_names()
 
 def unregister():
+    bpy.utils.unregister_class(VisibilityAnimFrame)
     pass

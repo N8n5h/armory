@@ -344,6 +344,92 @@ class ArmoryExporter:
         for subbobject in bone.children:
             self.process_bone(subbobject)
 
+    def export_visibility_anim(self, bobject: bpy.types.Object, o):
+        if len(bobject.children) == 0:
+            print("error, no frame data (child objects) for", bobject.name)
+            return
+
+        # scout the data of this anim to find start frame and end frame
+        action_datas = []
+        start_frame = end_frame = None
+        for frame_obj in bobject.children:
+            act_data = frame_obj.arm_visibility_anim_frame
+            if act_data is None:
+                print("error, wrong frame data for ", frame_obj.name, ". Skipping")
+                continue
+            if not frame_obj.arm_export:
+                print("Export for ", frame_obj.name, " is false. Skipping")
+                continue
+            data = {}
+            data['layer'] = act_data.layer_name
+            data['frame'] = frame_number = act_data.frame_number
+            data['name'] = frame_obj.name
+            action_datas.append(data)
+            start_frame = frame_number if start_frame is None or frame_number < start_frame else start_frame
+            end_frame   = frame_number if end_frame   is None or frame_number > end_frame   else end_frame
+
+        anim_length = end_frame - start_frame
+        # skip exporting anim if it's only one frame
+        if anim_length == 0:
+            for frame_data in bobject.children:
+                frame_data.arm_spawn = True
+            return
+
+        action_name = arm.utils.safestr(arm.utils.asset_name(bobject))
+
+        if 'object_actions' not in o:
+            o['object_actions'] = []
+
+        fp = self.get_meshes_file_path('action_' + action_name, compressed=ArmoryExporter.compress_enabled)
+        assets.add(fp)
+        ext = '.lz4' if ArmoryExporter.compress_enabled else ''
+        if ext == '' and not bpy.data.worlds['Arm'].arm_minimize:
+            ext = '.json'
+        o['object_actions'].append('action_' + action_name + ext)
+
+        oanim = {}
+        oanim['begin'] = start_frame
+        oanim['end'] = end_frame + 1
+        oanim['tracks'] = []
+
+        oaction = {}
+        oaction['anim'] = oanim
+
+        object_anim_data = {}
+        object_anim_data['objects'] = []
+        object_anim_data['objects'].append(oaction)
+
+        frames = [(i + start_frame) for i in range(2 + anim_length)]
+        layers = []
+        ref_values_dict = {}
+        for data in action_datas:
+            frame_number = data['frame']
+            layer = data['layer']
+            obj_name = data['name']
+            if layer not in layers:
+                layers.append(layer)
+                #create layer object
+                action_track = {}
+                action_track['target'] = layer
+                action_track['frames'] = frames
+                # populate values with default empty arrays
+                ref_values_dict[layer] = action_track['values'] = [[] for i in range(2 + anim_length)]
+                oanim['tracks'].append(action_track)
+            frame_index = frame_number - 1
+            # store a reference to the object in the correct layer with ref_values array
+            ref_values_dict[layer][frame_index].append(obj_name)
+
+        if True:
+            print('Exporting visibility object action ' + action_name)
+            actionf = {}
+            actionf['objects'] = []
+            actionf['objects'].append(oaction)
+            oaction['type'] = "visibility"
+            oaction['name'] = action_name
+            oaction['data_ref'] = ''
+            oaction['transform'] = None
+            arm.utils.write_arm(fp, actionf)
+
     def process_bobject(self, bobject: bpy.types.Object) -> None:
         """Stores some basic information about the given object (its
         name and type).
@@ -847,7 +933,10 @@ class ArmoryExporter:
                     out_object['object_actions'].insert(0, 'null')
                 bobject.animation_data.action = orig_action
             else:
-                self.export_object_transform(bobject, out_object)
+                if bobject.arm_visibility_anim:
+                    self.export_object_transform(bobject, out_object)
+                else:
+                    self.export_object_transform(bobject, out_object)
 
             # If the object is parented to a bone and is not relative, then undo the bone's transform
             if bobject.parent_type == "BONE":
