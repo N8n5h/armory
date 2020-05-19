@@ -217,6 +217,8 @@ class ARM_PT_MaterialPropsPanel(bpy.types.Panel):
         layout.prop(mat, 'arm_skip_context')
         layout.prop(mat, 'arm_particle_fade')
         layout.prop(mat, 'arm_billboard')
+        params = mat.arm_params
+        layout.prop(params, 'z_index')
 
         layout.operator("arm.invalidate_material_cache")
 

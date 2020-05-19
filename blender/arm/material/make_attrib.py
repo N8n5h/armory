@@ -8,6 +8,7 @@ import arm.material.cycles as cycles
 def write_vertpos(vert):
     billboard = mat_state.material.arm_billboard
     particle = mat_state.material.arm_particle_flag
+    z_index = mat_state.material.arm_params.z_index > 0
     # Particles
     if particle:
         if arm.utils.get_rp().arm_particles == 'On':
@@ -29,6 +30,9 @@ def write_vertpos(vert):
         else: # off
             vert.add_uniform('mat4 WVP', '_worldViewProjectionMatrix')
         vert.write('gl_Position = WVP * spos;')
+    if z_index:
+        vert.add_uniform('int z_index')
+        vert.write('gl_Position.z -= 0.0001 * z_index;')
 
 def write_norpos(con_mesh, vert, declare=False, write_nor=True):
     prep = ''

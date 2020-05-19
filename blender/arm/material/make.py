@@ -75,7 +75,11 @@ def parse(material, mat_data, mat_users, mat_armusers):
             const['name'] = 'receiveShadow'
             const['bool'] = material.arm_receive_shadow
             c['bind_constants'].append(const)
-
+            if material.arm_params.z_index > 0:
+                const = {}
+                const['name'] = 'z_index'
+                const['int'] = material.arm_params.z_index
+                c['bind_constants'].append(const)
             if material.arm_material_id != 0:
                 const = {}
                 const['name'] = 'materialID'

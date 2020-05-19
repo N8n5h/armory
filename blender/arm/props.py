@@ -280,11 +280,15 @@ def init_properties():
     bpy.types.Node.arm_material_param = BoolProperty(name="Parameter", description="Control this node from script", default=False)
     bpy.types.Node.arm_logic_id = StringProperty(name="ID", description="Nodes with equal identifier will share data", default='')
     bpy.types.Node.arm_watch = BoolProperty(name="Watch", description="Watch value of this node in debug console", default=False)
+    bpy.types.Material.arm_params = PointerProperty(type=MaterialParams)
     # Particles
     bpy.types.ParticleSettings.arm_count_mult = FloatProperty(name="Multiply Count", description="Multiply particle count when rendering in Armory", default=1.0)
     bpy.types.ParticleSettings.arm_loop = BoolProperty(name="Loop", description="Loop this particle system", default=False)
 
     create_wrd()
+
+class MaterialParams(bpy.types.PropertyGroup):
+    z_index: IntProperty(name="z_index", default=0, description="Solves z-fighting for overlapping faces \nHigher z_index = more priority")
 
 def create_wrd():
     if not 'Arm' in bpy.data.worlds:
@@ -315,8 +319,10 @@ def init_properties_on_load():
         arm.make.clean()
 
 def register():
+    bpy.utils.register_class(MaterialParams)
     init_properties()
     arm.utils.fetch_bundled_script_names()
 
 def unregister():
+    bpy.utils.unregister_class(MaterialParams)
     pass
