@@ -11,7 +11,7 @@
 #ifdef _SinglePoint
 	#ifdef _Spot
 	uniform sampler2DShadow shadowMapSpot[1];
-	uniform mat4 LWVPSpot0;
+	uniform mat4 LWVPSpot[1];
 	#else
 	uniform samplerCubeShadow shadowMapPoint[1];
 	uniform vec2 lightProj;
@@ -22,10 +22,7 @@
 	uniform vec2 lightProj;
 	#ifdef _Spot
 	uniform sampler2DShadow shadowMapSpot[4];
-	uniform mat4 LWVPSpot0;
-	uniform mat4 LWVPSpot1;
-	uniform mat4 LWVPSpot2;
-	uniform mat4 LWVPSpot3;
+	uniform mat4 LWVPSpot[maxLightsCluster];
 	#endif
 #endif
 #endif

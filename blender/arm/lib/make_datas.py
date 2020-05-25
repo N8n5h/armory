@@ -150,7 +150,7 @@ def parse_shader(sres, c, con, defs, lines, parse_attributes):
                     if tu['name'] == cid:
                         found = True
                         break
-                if found == False:
+                if not found:
                     if cid[-1] == ']': # Array of samplers - sampler2D mySamplers[2]
                         # Add individual units - mySamplers[0], mySamplers[1]
                         for i in range(int(cid[-2])):
@@ -196,19 +196,22 @@ def parse_shader(sres, c, con, defs, lines, parse_attributes):
                                     tu['link'] = l['link']
                                 break
             else: # Constant
-                if cid.find('[') != -1: # Float arrays
-                    cid = cid.split('[')[0]
-                    ctype = 'floats'
+                if ctype.startswith('mat'):
+                    # Hack. Changes the name of the constant to be the first element instead of the length so it can be linked
+                    if cid[-1] == ']': # Array of matrices - mat4 myMatrices[2]
+                        oldcid = cid
+                        cid = cid[:-2] + '0]'
+                else:
+                    if cid.find('[') != -1: # Float arrays
+                        cid = cid.split('[')[0]
+                        ctype = 'floats'
                 for const in con['constants']:
                     if const['name'] == cid:
                         found = True
                         break
-                if found == False:
-                    const = {}
-                    con['constants'].append(const)
-                    const['type'] = ctype
-                    const['name'] = cid
+                if not found:
                     # Check for link
+                    link = ''
                     for l in c['links']:
                         if l['name'] == cid:
                             valid_link = True
@@ -238,8 +241,24 @@ def parse_shader(sres, c, con, defs, lines, parse_attributes):
                                     valid_link = False
 
                             if valid_link:
-                                const['link'] = l['link']
+                                link = l['link']
                             break
+
+                    if cid[-1] == ']': # Array of matrices - mat4 myMatrices[2]
+                        cid = oldcid
+                        # Add individual units -  myMatrices[0],  myMatrices[1]
+                        for i in range(int(cid[-2])):
+                            const = {}
+                            con['constants'].append(const)
+                            const['type'] = ctype
+                            const['name'] = cid[:-2] + str(i) + ']'
+                            const['link'] = link[:-1] + str(i)
+                    else:
+                        const = {}
+                        con['constants'].append(const)
+                        const['type'] = ctype
+                        const['name'] = cid
+                        const['link'] = link
 
 def make(res, base_name, json_data, fp, defs, make_variants):
     sres = {}

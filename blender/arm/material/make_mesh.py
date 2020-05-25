@@ -407,8 +407,8 @@ def make_forward_mobile(con_mesh):
             frag.write('if (receiveShadow) {')
             if '_Spot' in wrd.world_defs:
                 vert.add_out('vec4 spotPosition')
-                vert.add_uniform('mat4 LWVPSpot0', link='_biasLightWorldViewProjectionMatrixSpot0')
-                vert.write('spotPosition = LWVPSpot0 * spos;')
+                vert.add_uniform('mat4 LWVPSpot[0]', link='_biasLightWorldViewProjectionMatrixSpot0')
+                vert.write('spotPosition = LWVPSpot[0] * spos;')
                 frag.add_uniform('sampler2DShadow shadowMapSpot[1]')
                 frag.write('if (spotPosition.w > 0.0) {')
                 frag.write('    vec3 lPos = spotPosition.xyz / spotPosition.w;')
@@ -535,13 +535,11 @@ def make_forward(con_mesh):
         frag.add_uniform('sampler2D sltcMag', '_ltcMag', included=True)
         if '_ShadowMap' in wrd.world_defs:
             if '_SinglePoint' in wrd.world_defs:
-                frag.add_uniform('mat4 LWVPSpot0', link='_biasLightViewProjectionMatrixSpot0', included=True)
+                frag.add_uniform('mat4 LWVPSpot[0]', link='_biasLightViewProjectionMatrixSpot0', included=True)
                 frag.add_uniform('sampler2DShadow shadowMapSpot[1]', included=True)
             if '_Clusters' in wrd.world_defs:
-                frag.add_uniform('mat4 LWVPSpot0', link='_biasLightWorldViewProjectionMatrixSpot0', included=True)
-                frag.add_uniform('mat4 LWVPSpot1', link='_biasLightWorldViewProjectionMatrixSpot1', included=True)
-                frag.add_uniform('mat4 LWVPSpot2', link='_biasLightWorldViewProjectionMatrixSpot2', included=True)
-                frag.add_uniform('mat4 LWVPSpot3', link='_biasLightWorldViewProjectionMatrixSpot3', included=True)
+                for i in range(3):
+                    frag.add_uniform(f'mat4 LWVPSpot[{i}]', link=f'_biasLightWorldViewProjectionMatrixSpot{i}', included=True)
                 frag.add_uniform('sampler2DShadow shadowMapSpot[4]', included=True)
 
     if not blend:
@@ -707,7 +705,7 @@ def make_forward_base(con_mesh, parse_opacity=False, transluc_pass=False):
             frag.add_uniform('float pointBias', link='_pointShadowsBias')
             if '_Spot' in wrd.world_defs:
                 # Skip world matrix, already in world-space
-                frag.add_uniform('mat4 LWVPSpot0', link='_biasLightViewProjectionMatrixSpot0', included=True)
+                frag.add_uniform('mat4 LWVPSpot[0]', link='_biasLightViewProjectionMatrixSpot0', included=True)
                 frag.add_uniform('sampler2DShadow shadowMapSpot[1]', included=True)
             else:
                 frag.add_uniform('vec2 lightProj', link='_lightPlaneProj', included=True)

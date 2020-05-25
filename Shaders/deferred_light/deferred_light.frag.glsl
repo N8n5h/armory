@@ -2,10 +2,10 @@
 
 #include "compiled.inc"
 #include "std/gbuffer.glsl"
-#include "std/light.glsl"
 #ifdef _Clusters
 #include "std/clusters.glsl"
 #endif
+#include "std/light.glsl"
 #ifdef _Irr
 #include "std/shirr.glsl"
 #endif
@@ -80,14 +80,11 @@ uniform mat4 invVP;
 #ifdef _ShadowMap
 	#ifdef _SinglePoint
 	//!uniform sampler2DShadow shadowMapSpot[1];
-	//!uniform mat4 LWVPSpot0;
+	//!uniform mat4 LWVPSpot[1];
 	#endif
 	#ifdef _Clusters
 	//!uniform sampler2DShadow shadowMapSpot[4];
-	//!uniform mat4 LWVPSpot0;
-	//!uniform mat4 LWVPSpot1;
-	//!uniform mat4 LWVPSpot2;
-	//!uniform mat4 LWVPSpot3;
+	//!uniform mat4 LWVPSpot[4];
 	#endif
 #endif
 #endif
@@ -109,7 +106,7 @@ uniform vec2 cameraPlane;
 #ifdef _SinglePoint
 	#ifdef _Spot
 	//!uniform sampler2DShadow shadowMapSpot[1];
-	//!uniform mat4 LWVPSpot0;
+	//!uniform mat4 LWVPSpot[1];
 	#else
 	//!uniform samplerCubeShadow shadowMapPoint[1];
 	//!uniform vec2 lightProj;
@@ -120,10 +117,7 @@ uniform vec2 cameraPlane;
 	//!uniform vec2 lightProj;
 	#ifdef _Spot
 	//!uniform sampler2DShadow shadowMapSpot[4];
-	//!uniform mat4 LWVPSpot0;
-	//!uniform mat4 LWVPSpot1;
-	//!uniform mat4 LWVPSpot2;
-	//!uniform mat4 LWVPSpot3;
+	//!uniform mat4 LWVPSpot[4];
 	#endif
 #endif
 #endif

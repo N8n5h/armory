@@ -199,42 +199,42 @@
 					"ifdef": ["_SinglePoint", "_Spot"]
 				},
 				{
-					"name": "LWVPSpot0",
+					"name": "LWVPSpot[0]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot0",
 					"ifdef": ["_Spot", "_ShadowMap"]
 				},
 				{
-					"name": "LWVPSpot1",
+					"name": "LWVPSpot[1]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot1",
 					"ifdef": ["_Spot", "_ShadowMap"]
 				},
 				{
-					"name": "LWVPSpot2",
+					"name": "LWVPSpot[2]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot2",
 					"ifdef": ["_Spot", "_ShadowMap"]
 				},
 				{
-					"name": "LWVPSpot3",
+					"name": "LWVPSpot[3]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot3",
 					"ifdef": ["_Spot", "_ShadowMap"]
 				},
 				{
-					"name": "LWVPSpot0",
+					"name": "LWVPSpot[0]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot0",
 					"ifdef": ["_LTC", "_ShadowMap"]
 				},
 				{
-					"name": "LWVPSpot1",
+					"name": "LWVPSpot[1]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot1",
 					"ifdef": ["_LTC", "_ShadowMap"]
 				},
 				{
-					"name": "LWVPSpot2",
+					"name": "LWVPSpot[2]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot2",
 					"ifdef": ["_LTC", "_ShadowMap"]
 				},
 				{
-					"name": "LWVPSpot3",
+					"name": "LWVPSpot[3]",
 					"link": "_biasLightWorldViewProjectionMatrixSpot3",
 					"ifdef": ["_LTC", "_ShadowMap"]
 				}
