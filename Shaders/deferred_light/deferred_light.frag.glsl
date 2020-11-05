@@ -84,10 +84,7 @@ uniform mat4 invVP;
 	#endif
 	#ifdef _Clusters
 	//!uniform sampler2DShadow shadowMapSpot[4];
-	//!uniform mat4 LWVPSpot0;
-	//!uniform mat4 LWVPSpot1;
-	//!uniform mat4 LWVPSpot2;
-	//!uniform mat4 LWVPSpot3;
+	//!uniform mat4 LWVPSpot[maxLights];
 	#endif
 #endif
 #endif
@@ -120,10 +117,7 @@ uniform vec2 cameraPlane;
 	//!uniform vec2 lightProj;
 	#ifdef _Spot
 	//!uniform sampler2DShadow shadowMapSpot[4];
-	//!uniform mat4 LWVPSpot0;
-	//!uniform mat4 LWVPSpot1;
-	//!uniform mat4 LWVPSpot2;
-	//!uniform mat4 LWVPSpot3;
+	//!uniform mat4 LWVPSpot[maxLights];
 	#endif
 #endif
 #endif

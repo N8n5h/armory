@@ -35,10 +35,7 @@
 	uniform vec2 lightProj;
 	#ifdef _Spot
 	uniform sampler2DShadow shadowMapSpot[4];
-	uniform mat4 LWVPSpot0;
-	uniform mat4 LWVPSpot1;
-	uniform mat4 LWVPSpot2;
-	uniform mat4 LWVPSpot3;
+	uniform mat4 LWVPSpot[4];
 	#endif
 #endif
 #endif
@@ -58,10 +55,7 @@ uniform sampler2D sltcMag;
 	#endif
 	#ifdef _Clusters
 	uniform sampler2DShadow shadowMapSpot[4];
-	uniform mat4 LWVPSpot0;
-	uniform mat4 LWVPSpot1;
-	uniform mat4 LWVPSpot2;
-	uniform mat4 LWVPSpot3;
+	uniform mat4 LWVPSpot[4];
 	#endif
 	#endif
 #endif
@@ -136,20 +130,17 @@ vec3 sampleLight(const vec3 p, const vec3 n, const vec3 v, const float dotNV, co
 			direct *= shadowTest(shadowMapSpot[0], lPos.xyz / lPos.w, bias);
 			#endif
 			#ifdef _Clusters
+			vec4 lPos = LWVPSpot[index] * vec4(p + n * bias * 10, 1.0);
 			if (index == 0) {
-				vec4 lPos = LWVPSpot0 * vec4(p + n * bias * 10, 1.0);
 				direct *= shadowTest(shadowMapSpot[0], lPos.xyz / lPos.w, bias);
 			}
 			else if (index == 1) {
-				vec4 lPos = LWVPSpot1 * vec4(p + n * bias * 10, 1.0);
 				direct *= shadowTest(shadowMapSpot[1], lPos.xyz / lPos.w, bias);
 			}
 			else if (index == 2) {
-				vec4 lPos = LWVPSpot2 * vec4(p + n * bias * 10, 1.0);
 				direct *= shadowTest(shadowMapSpot[2], lPos.xyz / lPos.w, bias);
 			}
 			else if (index == 3) {
-				vec4 lPos = LWVPSpot3 * vec4(p + n * bias * 10, 1.0);
 				direct *= shadowTest(shadowMapSpot[3], lPos.xyz / lPos.w, bias);
 			}
 			#endif
@@ -172,20 +163,17 @@ vec3 sampleLight(const vec3 p, const vec3 n, const vec3 v, const float dotNV, co
 				direct *= shadowTest(shadowMapSpot[0], lPos.xyz / lPos.w, bias);
 				#endif
 				#ifdef _Clusters
+				vec4 lPos = LWVPSpot[index] * vec4(p + n * bias * 10, 1.0);
 				if (index == 0) {
-					vec4 lPos = LWVPSpot0 * vec4(p + n * bias * 10, 1.0);
 					direct *= shadowTest(shadowMapSpot[0], lPos.xyz / lPos.w, bias);
 				}
 				else if (index == 1) {
-					vec4 lPos = LWVPSpot1 * vec4(p + n * bias * 10, 1.0);
 					direct *= shadowTest(shadowMapSpot[1], lPos.xyz / lPos.w, bias);
 				}
 				else if (index == 2) {
-					vec4 lPos = LWVPSpot2 * vec4(p + n * bias * 10, 1.0);
 					direct *= shadowTest(shadowMapSpot[2], lPos.xyz / lPos.w, bias);
 				}
 				else if (index == 3) {
-					vec4 lPos = LWVPSpot3 * vec4(p + n * bias * 10, 1.0);
 					direct *= shadowTest(shadowMapSpot[3], lPos.xyz / lPos.w, bias);
 				}
 				#endif
